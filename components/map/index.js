@@ -10,7 +10,8 @@ export class Map extends Component {
     super(props, context)
     this.state = {
       loading: true,
-      center: [-97.731457, 30.263717]
+      center: [-97.731457, 30.263717],
+      circleRadius: 4
     }
 
     this.ReactMapboxGl = null
@@ -1577,7 +1578,10 @@ export class Map extends Component {
             <GeoJSONLayer
               data={geojson}
               circleLayout={{ visibility: 'visible' }}
-              circlePaint={{ 'circle-color': 'black', 'circle-radius': 4 }}
+              circlePaint={{
+                'circle-color': 'black',
+                'circle-radius': this.state.circleRadius
+              }}
               circleOnClick={(e) => {
                 this.props.selectFeatureMetadata({
                   // put event metadata here

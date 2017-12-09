@@ -11,18 +11,20 @@ export default class Layout extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      loading: true
+      loading: true,
+      selectFeatureMetadata: null
     }
-  }
-
-  componentDidMount () {
   }
 
   render () {
     return (
       <main>
-        <Map selectFeatureMetadata={(d) => console.info(d)} />
-        <MetadataPanel />
+        <Map selectFeatureMetadata={(d) => {
+          this.setState({ selectedFeatureMetadata: d })
+        }} />
+        <MetadataPanel
+          selectedFeatureMetadata={this.state.selectedFeatureMetadata}
+        />
         <Style sheet={sheet} />
       </main>
     )

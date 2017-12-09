@@ -16,10 +16,13 @@ export class MetadataPanel extends Component {
   }
 
   render () {
-    if (this.props.selectedBlockId) {
+    if (this.props.selectedFeatureMetadata) {
+      const { lat, lon } = this.props.selectedFeatureMetadata
       return (
         <section>
-          <h1>this.props.selectedBlockId</h1>
+          <h4>LOCATION METADATA</h4>
+          <p>Latitude: {lat}</p>
+          <p>Longitude: {lon}</p>
           <Style sheet={sheet} />
         </section>
       )
