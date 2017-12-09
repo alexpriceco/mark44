@@ -16,9 +16,18 @@ export class MetadataPanel extends Component {
   }
 
   render () {
+    if (this.props.selectedBlockId) {
+      return (
+        <section>
+          <h1>this.props.selectedBlockId</h1>
+          <Style sheet={sheet} />
+        </section>
+      )
+    }
+
     return (
-      <section>
-        METADATA ABOUT SELECTED BLOCK GOES HERE
+      <section className='no-selection'>
+        <h4>Select a block on the left</h4>
         <Style sheet={sheet} />
       </section>
     )

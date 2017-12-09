@@ -9,7 +9,8 @@ export class Map extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      loading: true
+      loading: true,
+      center: [-97.73145713579152, 30.26371778137515]
     }
 
     this.ReactMapboxGl = null
@@ -25,17 +26,22 @@ export class Map extends Component {
   render () {
     if (this.ReactMapboxGl) {
       const Map = this.ReactMapboxGl({
+        // if this is breaking, make sure to check step X in the readme
         accessToken: MAPBOX_ACCESS_TOKEN
       })
 
       return (
         <div>
           <Map
-          style='mapbox://styles/alexprice/cjazmeo05puoy2sqvx8o999lj'
-          containerStyle={{
-            height: '100vh',
-            width: '100vw'
-          }} />
+            style='mapbox://styles/alexprice/cjazmeo05puoy2sqvx8o999lj'
+            containerStyle={{
+              height: '100vh',
+              width: 'calc(100vw - 32em)'
+            }}
+            onMove={(e) => console.debug('onMove', e)}
+            onClick={(e) => console.debug('onClick', e)}
+            center={this.state.center}
+          />
 
           <Style sheet={sheet} />
         </div>

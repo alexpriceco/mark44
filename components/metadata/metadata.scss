@@ -17,6 +17,11 @@ section {
 
   box-sizing: border-box;
   height: 100vh;
-  max-width: 25vw;
-  min-width: 24em;
+  width: 24em;
+
+  &.no-selection {
+    justify-content: center;
+    align-items: center;
+    > * { opacity: 0.75; }
+  }
 }
