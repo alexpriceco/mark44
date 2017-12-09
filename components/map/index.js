@@ -1577,13 +1577,7 @@ export class Map extends Component {
             <GeoJSONLayer
               data={geojson}
               circleLayout={{ visibility: 'visible' }}
-              circlePaint={{ 'circle-color': 'orange' }}
-              symbolPaint={{ 'text-color': 'orange' }}
-              symbolLayout={{
-                'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-                'text-offset': [0, 0.6],
-                'text-anchor': 'top'
-              }}
+              circlePaint={{ 'circle-color': 'black' }}
             />
           </Map>
 
