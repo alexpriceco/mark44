@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import Loader from '../general/loader'
 import Style from '../general/style'
-import sheet from '../base.scss'
+import sheet from './metadata.scss'
 
 export class MetadataPanel extends Component {
   constructor (props, context) {
@@ -17,12 +17,12 @@ export class MetadataPanel extends Component {
 
   render () {
     return (
-      <div>
+      <section>
         METADATA ABOUT SELECTED BLOCK GOES HERE
         <Style sheet={sheet} />
-      </div>
+      </section>
     )
   }
 }
 
-export default Layout
+export default MetadataPanel

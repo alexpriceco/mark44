@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl'
+import { MAPBOX_ACCESS_TOKEN } from '../../config/tokens.js'
 
 import Loader from '../general/loader'
 import Style from '../general/style'
-import sheet from '../base.scss'
+import sheet from './map.scss'
 
 export class Map extends Component {
   constructor (props, context) {
@@ -11,35 +11,39 @@ export class Map extends Component {
     this.state = {
       loading: true
     }
+
+    this.ReactMapboxGl = null
+    if (process.browser) {
+      const ReactMapboxGlLibrary = require('react-mapbox-gl')
+      this.ReactMapboxGl = ReactMapboxGlLibrary.default
+    }
   }
 
   componentDidMount () {
   }
 
-  const Map = ReactMapboxGl({
-    accessToken: MAPBOX_ACCESS_TOKEN
-  })
-
   render () {
-    return (
-      <div>
-        <Map
-        style='mapbox://styles/mapbox/streets-v9'
-        containerStyle={{
-          height: '100vh',
-          width: '80vw'
-        }}>
-          <Layer
-            type='symbol'
-            id='marker'
-            layout={{ 'icon-image': 'marker-15' }}>
-            <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
-          </Layer>
-        </Map>
-        <Style sheet={sheet} />
-      </div>
+    if (this.ReactMapboxGl) {
+      const Map = this.ReactMapboxGl({
+        accessToken: MAPBOX_ACCESS_TOKEN
+      })
+
+      return (
+        <div>
+          <Map
+          style='mapbox://styles/alexprice/cjazmeo05puoy2sqvx8o999lj'
+          containerStyle={{
+            height: '100vh',
+            width: '100vw'
+          }} />
+
+          <Style sheet={sheet} />
+        </div>
+      )
+    } else return (
+      <Loader />
     )
   }
 }
 
-export default Layout
+export default Map

@@ -1,0 +1,22 @@
+@import '../vars';
+@import '../reset';
+@import '../mixins';
+@import '../animations';
+
+section {
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  background: $white;
+  border-left: 1px solid lighten($black, 90%);
+  padding: 4em;
+
+  box-sizing: border-box;
+  height: 100vh;
+  max-width: 25vw;
+  min-width: 24em;
+}

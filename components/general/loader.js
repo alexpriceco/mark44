@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import sheet from './loader.scss'
 import Style from './style'
 
-export class Loader extends Component {
+export default class Loader extends Component {
   render () {
     return (
       // based on https://codepen.io/suez/pen/myvgdg?editors=1100
@@ -33,5 +33,3 @@ export class Loader extends Component {
     )
   }
 }
-
-export default Loader
