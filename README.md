@@ -1,7 +1,5 @@
-### Time journaling, visualized.
-![Title](http://i.imgur.com/tMpCZ4n.png)
-![Key](http://i.imgur.com/biDTHlz.png)
-![Log](http://i.imgur.com/CtSPI2T.png)
+### Hack Austin 2017
+We'll need to describe the project here. Firebase is built in here, but it can be ripped out if we won't need it. Perhaps we could write insights from our neural net into Firebase, and use that to drive this app?
 
 
 ## Launching a development environment
