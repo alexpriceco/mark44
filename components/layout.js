@@ -21,7 +21,7 @@ export default class Layout extends Component {
   render () {
     return (
       <main>
-        <Map />
+        <Map selectFeatureMetadata={(d) => console.info(d)} />
         <MetadataPanel />
         <Style sheet={sheet} />
       </main>

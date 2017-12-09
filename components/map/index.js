@@ -1316,8 +1316,8 @@ export class Map extends Component {
         return {
           "type":"Feature",
           "properties":{
-            "place":"The coffee bar",
-            "login":"espresso",
+            "name":"The coffee bar",
+            "data":"espresso",
             "lat":`${lat}`,
             "lon":`${lon}`
           },
@@ -1577,7 +1577,13 @@ export class Map extends Component {
             <GeoJSONLayer
               data={geojson}
               circleLayout={{ visibility: 'visible' }}
-              circlePaint={{ 'circle-color': 'black' }}
+              circlePaint={{ 'circle-color': 'black', 'circle-radius': 4 }}
+              circleOnClick={(e) => {
+                this.props.selectFeatureMetadata({
+                  // put event metadata here
+                  ...e.features[0].properties
+                })
+              }}
             />
           </Map>
 
