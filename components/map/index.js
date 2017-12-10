@@ -16,7 +16,8 @@ export class Map extends Component {
       hoveredGeoID: '',
       loadedMap: false,
       addedSource: false,
-      loadedSource: false
+      loadedSource: false,
+      loadedSourceData: false
     }
 
     this.ReactMapboxGl = null
@@ -89,6 +90,13 @@ export class Map extends Component {
           className='map-container'
           onMouseMove={this.drawLines}
         >
+          <div className={
+            'loading-container' +
+            (this.state.loadedMap ? ' hidden' : '')
+          }>
+            <Loader />
+          </div>
+
           <Map
             center={this.state.center}
             zoom={this.state.zoom}
@@ -199,7 +207,17 @@ export class Map extends Component {
           <Style sheet={sheet} />
         </div>
       )
-    } else return <Loader key={new Date().toISOString()} />
+    } else {
+      return (
+        <div className={
+          'loading-container' +
+          (this.state.loadedMap ? ' hidden' : '')
+        }>
+          <Loader />
+          <Style sheet={sheet} />
+        </div>
+      )
+    }
   }
 }
 
