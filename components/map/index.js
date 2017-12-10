@@ -12,6 +12,7 @@ export class Map extends Component {
     this.state = {
       loading: true,
       center: [-97.731457, 30.263717],
+      BLOCKCE10Hovered: '',
       BLOCKCE10: '',
       lineWidth: 4
     }
@@ -1568,9 +1569,16 @@ export class Map extends Component {
                 'fill-color': 'black',
                 'fill-opacity': 0.01
               }}
-              layerOptions={{ 'filter': ["all", ["!=", "BLOCKCE10", this.state.BLOCKCE10]] }}
-              fillOnMouseEnter={(e) => console.info('enter 1', e)}
-              fillOnMouseLeave={(e) => console.info('leave 1', e)}
+              layerOptions={{
+                'filter': ["all",
+                  ["!=", "BLOCKCE10", this.state.BLOCKCE10]
+                ]
+              }}
+              fillOnMouseEnter={(e) => {
+                this.setState({
+                  BLOCKCE10Hovered: e.features[0].properties.BLOCKCE10
+                })
+              }}
               fillOnClick={(e) => {
                 const BLOCKCE10 = e.features[0].properties.BLOCKCE10
                 console.info('BLOCKCE10 1', BLOCKCE10)
@@ -1586,19 +1594,28 @@ export class Map extends Component {
               data={GeoJSONData}
               fillLayout={{ visibility: 'visible' }}
               fillPaint={{
-                'fill-color': 'red',
-                'fill-opacity': 0.25
+                'fill-color': 'black',
+                'fill-opacity': 0.05
               }}
-              layerOptions={{ 'filter': ["all", ["==", "BLOCKCE10", this.state.BLOCKCE10]] }}
-              fillOnMouseEnter={(e) => console.info('enter 2', e)}
-              fillOnMouseLeave={(e) => console.info('leave 2', e)}
-              fillOnClick={(e) => {
-                const BLOCKCE10 = e.features[0].properties.BLOCKCE10
-                console.info('BLOCKCE10 2', BLOCKCE10)
-                this.setState({ BLOCKCE10 })
-                this.props.selectFeatureMetadata({
-                  ...e.features[0].properties
-                })
+              layerOptions={{
+                'filter': ["all",
+                  ["==", "BLOCKCE10", this.state.BLOCKCE10Hovered]
+                ]
+              }}
+            ></GeoJSONLayer>
+
+            <GeoJSONLayer
+              id='select-layer'
+              data={GeoJSONData}
+              fillLayout={{ visibility: 'visible' }}
+              fillPaint={{
+                'fill-color': 'red',
+                'fill-opacity': 0.75
+              }}
+              layerOptions={{
+                'filter': ["all",
+                  ["==", "BLOCKCE10", this.state.BLOCKCE10]
+                ]
               }}
             ></GeoJSONLayer>
           </Map>
