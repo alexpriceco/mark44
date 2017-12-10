@@ -13,13 +13,20 @@ export class MetadataPanel extends Component {
 
   renderMetadata (features) {
     const featureList = Object.keys(features)
-    return featureList.map((f, i) => {
+    const rows = featureList.map((f, i) => {
       return (
-        <p key={`feature-${i}`}>
-          {f}: {features[f]}
-        </p>
+        <div className='row' key={`feature-${i}`}>
+          <span>{f}</span>
+          <span>{features[f]}</span>
+        </div>
       )
     })
+
+    return (
+      <div className='table'>
+        {rows}
+      </div>
+    )
   }
 
   render () {
