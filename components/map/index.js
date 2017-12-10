@@ -12,8 +12,8 @@ export class Map extends Component {
       zoom: [11],
       loading: true,
       center: [-97.731457, 30.263717],
-      SelectedGeoID: '',
-      HoveredGeoID: '',
+      selectedGeoID: '',
+      hoveredGeoID: '',
       loadedMap: false,
       addedSource: false,
       loadedSource: false
@@ -23,6 +23,7 @@ export class Map extends Component {
     if (process.browser) {
       const ReactMapboxGlLibrary = require('react-mapbox-gl')
       this.ReactMapboxGl = ReactMapboxGlLibrary.default
+      this.Layer = ReactMapboxGlLibrary.Layer
       this.Source = ReactMapboxGlLibrary.Source
       this.GeoJSONLayer = ReactMapboxGlLibrary.GeoJSONLayer
 
@@ -46,13 +47,43 @@ export class Map extends Component {
     }
   }
 
-    // onStyleLoad={(map) => {
+  // filter={['!=', 'GEOID', this.state.SelectedGeoID]}
+
+    // <GeoJSONLayer
+    //   data={{}}
+    //   sourceId={'temp-8eryid'}
+    //   layerId='temp-8eryid-layer'
+    //   geoJSONSourceOptions={{
+    //     type: 'vector',
+    //     url: 'mapbox://alexprice.6lh130s9'
+    //   }}
     //
-    // }}
+      // fillLayout={{ visibility: 'visible' }}
+      // fillPaint={{
+      //   'fill-color': 'red',
+      //   'fill-opacity': 0.5
+      // }}
+    //
+    //   onClick={(e) => console.info('clicked')}
+    //   fillOnClick={(e) => {
+    //     const SelectedGeoID = e.features[0].properties.GEOID
+    //     console.info('SelectedGeoID', SelectedGeoID)
+    //     this.setState({ SelectedGeoID })
+    //     this.props.selectFeatureMetadata({
+    //       ...e.features[0].properties
+    //     })
+    //   }}
+    //   fillOnMouseEnter={(e) => {
+    //     console.info(e)
+    //     this.setState({
+    //       SelectedGeoID: e.features[0].properties.GEOID
+    //     })
+    //   }}
+    // />
 
   render () {
-    const { Map, GeoJSONLayer, Source } = this
-    if (Map && GeoJSONLayer && Source) {
+    const { Map, Layer, Source } = this
+    if (Map && Layer && Source) {
       return (
         <div
           className='map-container'
@@ -68,37 +99,98 @@ export class Map extends Component {
               cursor: 'none'
             }}
             onStyleLoad={(map) => {
-              this.setState({ loadedMap: true })
+              this.setState({ loadedMap: true }, () => {
+                map.addLayer({
+                  id: 'census-blocks',
+                  type: 'fill',
+                  source: {
+                    type: 'vector',
+                    url: 'mapbox://alexprice.6lh130s9'
+                  },
+                  'source-layer': 'temp-8eryid',
+                  'layout': {
+                    visibility: 'visible'
+                  },
+                  'paint': {
+                    'fill-opacity': 0
+                  },
+                  'filter': ['!=', 'GEOID', '']
+                })
+
+                map.addLayer({
+                  id: 'census-blocks-outline',
+                  type: 'line',
+                  source: {
+                    type: 'vector',
+                    url: 'mapbox://alexprice.6lh130s9'
+                  },
+                  'source-layer': 'temp-8eryid',
+                  'layout': {
+                    visibility: 'visible'
+                  },
+                  'paint': {
+                    'line-color': 'black',
+                    'line-opacity': 0.1,
+                    'line-width': 0.5
+                  },
+                  'filter': ['!=', 'GEOID', '']
+                })
+
+                map.on('click', 'census-blocks', (e) => {
+                  const { GEOID } = e.features[0].properties
+                  this.setState({ selectedGeoID: GEOID })
+                  this.props.selectFeatureMetadata({
+                    ...e.features[0].properties,
+                    selectedGeoID: e.features[0].properties.GEOID
+                  })
+                })
+
+                map.on('mousemove', 'census-blocks', (e) => {
+                  const { GEOID } = e.features[0].properties
+                  if (this.state.hoveredGeoID !== GEOID) {
+                    this.setState({ hoveredGeoID: GEOID })
+                  }
+                })
+              })
             }}
           >
+            {/* this.state.loadedMap
+              ? <Source
+                sourceId='census-blocks-data'
+                geoJSONSourceOptions={{
+                  type: 'vector',
+                  url: 'mapbox://alexprice.6lh130s9'
+                }}
+              />
+              : null */}
 
-            { this.state.loadedMap ? <GeoJSONLayer
-              data={`https://api.mapbox.com/v4/alexprice.6lh130s9/tilequery/${this.state.center[0]},${this.state.center[1]}.json?radius=${this.state.zoom}&access_token=${MAPBOX_ACCESS_TOKEN}`}
-              geoJSONSourceOptions={{
-                type: 'vector',
-                url: 'mapbox://alexprice.6lh130s9'
+            { this.state.loadedMap ? <Layer
+              id='census-blocks-clicked'
+              sourceLayer='temp-8eryid'
+              sourceId='census-blocks'
+              type='fill'
+              layout={{}}
+              paint={{
+                'fill-opacity': 0.5,
+                'fill-color': '#1A212D'
               }}
-              fillLayout={{ visibility: 'visible' }}
-              fillPaint={{
-                'fill-color': 'black',
-                'fill-opacity': 0.5
+              filter={['==', 'GEOID', this.state.selectedGeoID]}
+            />
+            : null }
+
+            { this.state.loadedMap ? <Layer
+              id='census-blocks-hovered'
+              sourceLayer='temp-8eryid'
+              sourceId='census-blocks'
+              type='fill'
+              layout={{}}
+              paint={{
+                'fill-opacity': 0.1,
+                'fill-color': '#75DAD4'
               }}
-              filter={['all', ['==', 'GEOID', this.state.SelectedGeoID]]}
-              fillOnMouseEnter={(e) => {
-                console.info(e)
-                this.setState({
-                  SelectedGeoID: e.features[0].properties.GEOID
-                })
-              }}
-              fillOnClick={(e) => {
-                const SelectedGeoID = e.features[0].properties.GEOID
-                console.info('SelectedGeoID', SelectedGeoID)
-                this.setState({ SelectedGeoID })
-                this.props.selectFeatureMetadata({
-                  ...e.features[0].properties
-                })
-              }}
-            /> : null}
+              filter={['==', 'GEOID', this.state.hoveredGeoID]}
+            />
+            : null }
           </Map>
 
           <div className='vertLine' ref={(r) => { this.vertLine = r }} />

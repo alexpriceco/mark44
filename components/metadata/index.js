@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import Loader from '../general/loader'
 import Style from '../general/style'
 import sheet from './metadata.scss'
 
@@ -16,7 +15,7 @@ export class MetadataPanel extends Component {
     const featureList = Object.keys(features)
     return featureList.map((f, i) => {
       return (
-        <p>
+        <p key={`feature-${i}`}>
           {f}: {features[f]}
         </p>
       )
