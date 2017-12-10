@@ -29,7 +29,6 @@ export class Map extends Component {
     this.drawLines = this.drawLines.bind(this)
   }
 
-
   // <Layer
   //   type='fill'
   //   paint={{
@@ -95,7 +94,7 @@ export class Map extends Component {
                   ...e.features[0].properties
                 })
               }}
-            ></GeoJSONLayer>
+            />
 
             <GeoJSONLayer
               id='base-layer'
@@ -106,8 +105,8 @@ export class Map extends Component {
                 'fill-opacity': 0.05
               }}
               layerOptions={{
-                'filter': ["all",
-                  ["==", "BLOCKCE10", this.state.BLOCKCE10Hovered]
+                'filter': ['all',
+                  ['==', 'BLOCKCE10', this.state.BLOCKCE10Hovered]
                 ]
               }}
               fillOnClick={(e) => {
@@ -118,7 +117,7 @@ export class Map extends Component {
                   ...e.features[0].properties
                 })
               }}
-            ></GeoJSONLayer>
+            />
 
             <GeoJSONLayer
               id='select-layer'
@@ -129,8 +128,8 @@ export class Map extends Component {
                 'fill-opacity': 0.75
               }}
               layerOptions={{
-                'filter': ["all",
-                  ["==", "BLOCKCE10", this.state.BLOCKCE10]
+                'filter': ['all',
+                  ['==', 'BLOCKCE10', this.state.BLOCKCE10]
                 ]
               }}
               fillOnClick={(e) => {
@@ -141,7 +140,7 @@ export class Map extends Component {
                   ...e.features[0].properties
                 })
               }}
-            ></GeoJSONLayer>
+            />
           </Map>
 
           <div className='vertLine' ref={(r) => { this.vertLine = r }} />
@@ -150,9 +149,7 @@ export class Map extends Component {
           <Style sheet={sheet} />
         </div>
       )
-    } else return (
-      <Loader key={new Date().toISOString()} />
-    )
+    } else return <Loader key={new Date().toISOString()} />
   }
 }
 
