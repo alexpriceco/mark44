@@ -90,9 +90,7 @@ export class Map extends Component {
               fillOnClick={(e) => {
                 const BLOCKCE10 = e.features[0].properties.BLOCKCE10
                 console.info('BLOCKCE10 1', BLOCKCE10)
-                this.setState({ BLOCKCE10, clicked: true }, () => {
-                  setTimeout(() => this.setState({ clicked: false }), 200)
-                })
+                this.setState({ BLOCKCE10 })
                 this.props.selectFeatureMetadata({
                   ...e.features[0].properties
                 })
@@ -115,9 +113,7 @@ export class Map extends Component {
               fillOnClick={(e) => {
                 const BLOCKCE10 = e.features[0].properties.BLOCKCE10
                 console.info('BLOCKCE10 2', BLOCKCE10)
-                this.setState({ BLOCKCE10, clicked: true }, () => {
-                  setTimeout(() => this.setState({ clicked: false }), 200)
-                })
+                this.setState({ BLOCKCE10 })
                 this.props.selectFeatureMetadata({
                   ...e.features[0].properties
                 })
@@ -140,9 +136,7 @@ export class Map extends Component {
               fillOnClick={(e) => {
                 const BLOCKCE10 = e.features[0].properties.BLOCKCE10
                 console.info('BLOCKCE10 3', BLOCKCE10)
-                this.setState({ BLOCKCE10, clicked: true }, () => {
-                  setTimeout(() => this.setState({ clicked: false }), 200)
-                })
+                this.setState({ BLOCKCE10 })
                 this.props.selectFeatureMetadata({
                   ...e.features[0].properties
                 })
@@ -150,14 +144,8 @@ export class Map extends Component {
             ></GeoJSONLayer>
           </Map>
 
-          <div
-            className={'vertLine' + (this.state.clicked ? ' clicked' : '')}
-            ref={(r) => { this.vertLine = r }}
-          />
-          <div
-            className={'horizLine' + (this.state.clicked ? ' clicked' : '')}
-            ref={(r) => { this.horizLine = r }}
-          />
+          <div className='vertLine' ref={(r) => { this.vertLine = r }} />
+          <div className='horizLine' ref={(r) => { this.horizLine = r }} />
 
           <Style sheet={sheet} />
         </div>
