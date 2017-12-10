@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { MAPBOX_ACCESS_TOKEN } from '../../config/tokens.js'
-import GeoJSONData from './block-groups.json'
 
 import Loader from '../general/loader'
 import Style from '../general/style'
@@ -10,17 +9,21 @@ export class Map extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
+      zoom: [11],
       loading: true,
       center: [-97.731457, 30.263717],
-      BLOCKCE10Hovered: '',
-      BLOCKCE10: '',
-      lineWidth: 4
+      SelectedGeoID: '',
+      HoveredGeoID: '',
+      loadedMap: false,
+      addedSource: false,
+      loadedSource: false
     }
 
     this.ReactMapboxGl = null
     if (process.browser) {
       const ReactMapboxGlLibrary = require('react-mapbox-gl')
       this.ReactMapboxGl = ReactMapboxGlLibrary.default
+      this.Source = ReactMapboxGlLibrary.Source
       this.GeoJSONLayer = ReactMapboxGlLibrary.GeoJSONLayer
 
       this.Map = this.ReactMapboxGl({ accessToken: MAPBOX_ACCESS_TOKEN })
@@ -28,16 +31,6 @@ export class Map extends Component {
 
     this.drawLines = this.drawLines.bind(this)
   }
-
-  // <Layer
-  //   type='fill'
-  //   paint={{
-  //     'fill-color': '#6F788A',
-  //     'fill-opacity': 0.7
-  //   }}
-  // >
-  //   <Feature coordinates={GeoJSONData} />
-  // </Layer>
 
   drawLines (e) {
     let x = e.pageX
@@ -53,10 +46,13 @@ export class Map extends Component {
     }
   }
 
-  render () {
-    const { Map, GeoJSONLayer } = this
+    // onStyleLoad={(map) => {
+    //
+    // }}
 
-    if (Map && GeoJSONLayer) {
+  render () {
+    const { Map, GeoJSONLayer, Source } = this
+    if (Map && GeoJSONLayer && Source) {
       return (
         <div
           className='map-container'
@@ -64,83 +60,45 @@ export class Map extends Component {
         >
           <Map
             center={this.state.center}
+            zoom={this.state.zoom}
             style='mapbox://styles/alexprice/cjazmeo05puoy2sqvx8o999lj'
             containerStyle={{
               height: '100vh',
               width: 'calc(100vw - 32em)',
               cursor: 'none'
             }}
+            onStyleLoad={(map) => {
+              this.setState({ loadedMap: true })
+            }}
           >
-            <GeoJSONLayer
-              id='hover-layer'
-              data={GeoJSONData}
-              fillLayout={{
-                visibility: 'visible'
+
+            { this.state.loadedMap ? <GeoJSONLayer
+              data={`https://api.mapbox.com/v4/alexprice.6lh130s9/tilequery/${this.state.center[0]},${this.state.center[1]}.json?radius=${this.state.zoom}&access_token=${MAPBOX_ACCESS_TOKEN}`}
+              geoJSONSourceOptions={{
+                type: 'vector',
+                url: 'mapbox://alexprice.6lh130s9'
               }}
+              fillLayout={{ visibility: 'visible' }}
               fillPaint={{
                 'fill-color': 'black',
-                'fill-opacity': 0
+                'fill-opacity': 0.5
               }}
+              filter={['all', ['==', 'GEOID', this.state.SelectedGeoID]]}
               fillOnMouseEnter={(e) => {
+                console.info(e)
                 this.setState({
-                  BLOCKCE10Hovered: e.features[0].properties.BLOCKCE10
+                  SelectedGeoID: e.features[0].properties.GEOID
                 })
               }}
               fillOnClick={(e) => {
-                const BLOCKCE10 = e.features[0].properties.BLOCKCE10
-                console.info('BLOCKCE10 1', BLOCKCE10)
-                this.setState({ BLOCKCE10 })
+                const SelectedGeoID = e.features[0].properties.GEOID
+                console.info('SelectedGeoID', SelectedGeoID)
+                this.setState({ SelectedGeoID })
                 this.props.selectFeatureMetadata({
                   ...e.features[0].properties
                 })
               }}
-            />
-
-            <GeoJSONLayer
-              id='base-layer'
-              data={GeoJSONData}
-              fillLayout={{ visibility: 'visible' }}
-              fillPaint={{
-                'fill-color': 'black',
-                'fill-opacity': 0.05
-              }}
-              layerOptions={{
-                'filter': ['all',
-                  ['==', 'BLOCKCE10', this.state.BLOCKCE10Hovered]
-                ]
-              }}
-              fillOnClick={(e) => {
-                const BLOCKCE10 = e.features[0].properties.BLOCKCE10
-                console.info('BLOCKCE10 2', BLOCKCE10)
-                this.setState({ BLOCKCE10 })
-                this.props.selectFeatureMetadata({
-                  ...e.features[0].properties
-                })
-              }}
-            />
-
-            <GeoJSONLayer
-              id='select-layer'
-              data={GeoJSONData}
-              fillLayout={{ visibility: 'visible' }}
-              fillPaint={{
-                'fill-color': 'red',
-                'fill-opacity': 0.75
-              }}
-              layerOptions={{
-                'filter': ['all',
-                  ['==', 'BLOCKCE10', this.state.BLOCKCE10]
-                ]
-              }}
-              fillOnClick={(e) => {
-                const BLOCKCE10 = e.features[0].properties.BLOCKCE10
-                console.info('BLOCKCE10 3', BLOCKCE10)
-                this.setState({ BLOCKCE10 })
-                this.props.selectFeatureMetadata({
-                  ...e.features[0].properties
-                })
-              }}
-            />
+            /> : null}
           </Map>
 
           <div className='vertLine' ref={(r) => { this.vertLine = r }} />
