@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { MAPBOX_ACCESS_TOKEN } from '../../config/tokens.js'
+import GeoJSONData from './block-groups.json'
 
 import Loader from '../general/loader'
 import Style from '../general/style'
@@ -11,17 +12,15 @@ export class Map extends Component {
     this.state = {
       loading: true,
       center: [-97.731457, 30.263717],
-      circleRadius: 4
+      BLOCKCE10: '',
+      lineWidth: 4
     }
 
     this.ReactMapboxGl = null
     if (process.browser) {
       const ReactMapboxGlLibrary = require('react-mapbox-gl')
       this.ReactMapboxGl = ReactMapboxGlLibrary.default
-      this.Layer = ReactMapboxGlLibrary.Layer
-      this.Feature = ReactMapboxGlLibrary.Feature
       this.GeoJSONLayer = ReactMapboxGlLibrary.GeoJSONLayer
-      this.Marker = ReactMapboxGlLibrary.Marker
 
       this.Map = this.ReactMapboxGl({ accessToken: MAPBOX_ACCESS_TOKEN })
     }
@@ -1308,47 +1307,31 @@ export class Map extends Component {
       [-97.701326, 30.261502],
     ]
 
-    let geojson = {
-      type: 'FeatureCollection',
-      features: points.map((d) => {
-        const lat = d[0]
-        const lon = d[1]
-
-        return {
-          "type":"Feature",
-          "properties":{
-            "name":"The coffee bar",
-            "data":"espresso",
-            "lat":`${lat}`,
-            "lon":`${lon}`
-          },
-          "geometry":{
-            "type":"Point",
-            "coordinates":[
-              lat,
-              lon
-            ]
-          }
-        }
-      })
-    }
-
-    /* geojson.features.map((feature, i) => {
-      return (
-        <Marker
-          key={`point--${i}`}
-          coordinates={feature.geometry.coordinates}
-          data-feature={feature}
-          style={{
-            width: 5,
-            height: 5,
-            borderRadius: '50%',
-            backgroundColor: 'black',
-            cursor: 'pointer'
-          }}
-        />
-      )
-    }) */
+    // POINTS
+    // let GeoJSONData = {
+    //   type: 'FeatureCollection',
+    //   features: points.map((d) => {
+    //     const lat = d[0]
+    //     const lon = d[1]
+    //
+    //     return {
+    //       "type":"Feature",
+    //       "properties":{
+    //         "name":"The coffee bar",
+    //         "data":"espresso",
+    //         "lat":`${lat}`,
+    //         "lon":`${lon}`
+    //       },
+    //       "geometry":{
+    //         "type":"Point",
+    //         "coordinates":[
+    //           lat,
+    //           lon
+    //         ]
+    //       }
+    //     }
+    //   })
+    // }
 
     const testData = {
       "type":"FeatureCollection",
@@ -1576,19 +1559,48 @@ export class Map extends Component {
             }}
           >
             <GeoJSONLayer
-              data={geojson}
-              circleLayout={{ visibility: 'visible' }}
-              circlePaint={{
-                'circle-color': 'black',
-                'circle-radius': this.state.circleRadius
+              id='hover-layer'
+              data={GeoJSONData}
+              fillLayout={{
+                visibility: 'visible'
               }}
-              circleOnClick={(e) => {
+              fillPaint={{
+                'fill-color': 'black',
+                'fill-opacity': 0.01
+              }}
+              layerOptions={{ 'filter': ["all", ["!=", "BLOCKCE10", this.state.BLOCKCE10]] }}
+              fillOnMouseEnter={(e) => console.info('enter 1', e)}
+              fillOnMouseLeave={(e) => console.info('leave 1', e)}
+              fillOnClick={(e) => {
+                const BLOCKCE10 = e.features[0].properties.BLOCKCE10
+                console.info('BLOCKCE10 1', BLOCKCE10)
+                this.setState({ BLOCKCE10 })
                 this.props.selectFeatureMetadata({
-                  // put event metadata here
                   ...e.features[0].properties
                 })
               }}
-            />
+            ></GeoJSONLayer>
+
+            <GeoJSONLayer
+              id='base-layer'
+              data={GeoJSONData}
+              fillLayout={{ visibility: 'visible' }}
+              fillPaint={{
+                'fill-color': 'red',
+                'fill-opacity': 0.25
+              }}
+              layerOptions={{ 'filter': ["all", ["==", "BLOCKCE10", this.state.BLOCKCE10]] }}
+              fillOnMouseEnter={(e) => console.info('enter 2', e)}
+              fillOnMouseLeave={(e) => console.info('leave 2', e)}
+              fillOnClick={(e) => {
+                const BLOCKCE10 = e.features[0].properties.BLOCKCE10
+                console.info('BLOCKCE10 2', BLOCKCE10)
+                this.setState({ BLOCKCE10 })
+                this.props.selectFeatureMetadata({
+                  ...e.features[0].properties
+                })
+              }}
+            ></GeoJSONLayer>
           </Map>
 
           <Style sheet={sheet} />

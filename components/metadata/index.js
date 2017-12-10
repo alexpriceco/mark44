@@ -12,17 +12,25 @@ export class MetadataPanel extends Component {
     }
   }
 
-  componentDidMount () {
+  renderMetadata (features) {
+    const featureList = Object.keys(features)
+    return featureList.map((f, i) => {
+      return (
+        <p>
+          {f}: {features[f]}
+        </p>
+      )
+    })
   }
 
   render () {
     if (this.props.selectedFeatureMetadata) {
-      const { lat, lon } = this.props.selectedFeatureMetadata
+      const features = this.props.selectedFeatureMetadata
+
       return (
         <section>
           <h4>LOCATION METADATA</h4>
-          <p>Latitude: {lat}</p>
-          <p>Longitude: {lon}</p>
+          { this.renderMetadata(features) }
           <Style sheet={sheet} />
         </section>
       )
