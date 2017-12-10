@@ -1,4 +1,29 @@
 @import '../vars';
-@import '../reset';
-@import '../mixins';
-@import '../animations';
+
+.vertLine, .horizLine {
+  pointer-events: none;
+  z-index: 50;
+  left: 0; top: 0;
+  position: absolute;
+  background: $black;
+  opacity: 0.20;
+
+  &.clicked {
+    opacity: 0.4
+  }
+}
+
+.vertLine {
+  height: 100%;
+  width: 1px;
+}
+
+.horizLine {
+  width: 100%;
+  height: 1px;
+}
+
+.mapboxgl-canvas-container.mapboxgl-interactive,
+.mapboxgl-map *, .map-container *, .map-container {
+  cursor: none !important;
+}

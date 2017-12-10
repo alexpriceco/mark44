@@ -1,7 +1,4 @@
 @import '../vars';
-@import '../reset';
-@import '../mixins';
-@import '../animations';
 
 section {
   display: flex;
@@ -24,6 +21,11 @@ section {
     align-items: center;
     > * { opacity: 0.75; }
   }
+}
+
+h4 {
+  opacity: 0.75;
+  margin-bottom: 1em;
 }
 
 p {
