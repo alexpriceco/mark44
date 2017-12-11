@@ -1,0 +1,6 @@
+{
+  "rules": [
+    { "pathname": "/p/mark44", "dest": "mark44-mbmlrblkcp.now.sh" },
+    { "dest": "mark44-mbmlrblkcp.now.sh" }
+  ]
+}

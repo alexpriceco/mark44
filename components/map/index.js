@@ -35,52 +35,20 @@ export class Map extends Component {
   }
 
   drawLines (e) {
-    let x = e.pageX
-    let y = e.pageY
-    let vertLine = this.vertLine
-    let horizLine = this.horizLine
+    if (e) {
+      let x = e.pageX
+      let y = e.pageY
+      let vertLine = this.vertLine
+      let horizLine = this.horizLine
 
-    if (vertLine && horizLine) {
-      let slTrans = 'translate(' + x + 'px, 0px)'
-      let hrTrans = 'translate(0px, ' + y + 'px)'
-      vertLine.style.transform = slTrans
-      horizLine.style.transform = hrTrans
+      if (vertLine && horizLine) {
+        let slTrans = `translate(${x}px, 0px)`
+        let hrTrans = `translate(0px, ${y}px)`
+        vertLine.style.transform = slTrans
+        horizLine.style.transform = hrTrans
+      }
     }
   }
-
-  // filter={['!=', 'GEOID', this.state.SelectedGeoID]}
-
-    // <GeoJSONLayer
-    //   data={{}}
-    //   sourceId={'temp-8eryid'}
-    //   layerId='temp-8eryid-layer'
-    //   geoJSONSourceOptions={{
-    //     type: 'vector',
-    //     url: 'mapbox://alexprice.6lh130s9'
-    //   }}
-    //
-      // fillLayout={{ visibility: 'visible' }}
-      // fillPaint={{
-      //   'fill-color': 'red',
-      //   'fill-opacity': 0.5
-      // }}
-    //
-    //   onClick={(e) => console.info('clicked')}
-    //   fillOnClick={(e) => {
-    //     const SelectedGeoID = e.features[0].properties.GEOID
-    //     console.info('SelectedGeoID', SelectedGeoID)
-    //     this.setState({ SelectedGeoID })
-    //     this.props.selectFeatureMetadata({
-    //       ...e.features[0].properties
-    //     })
-    //   }}
-    //   fillOnMouseEnter={(e) => {
-    //     console.info(e)
-    //     this.setState({
-    //       SelectedGeoID: e.features[0].properties.GEOID
-    //     })
-    //   }}
-    // />
 
   render () {
     const { Map, Layer, Source } = this
@@ -145,6 +113,7 @@ export class Map extends Component {
                 })
 
                 map.on('click', 'census-blocks', (e) => {
+                  if (!e) console.warn('NO EVENT FIRED ON CLICK')
                   const { GEOID } = e.features[0].properties
                   this.setState({ selectedGeoID: GEOID })
                   this.props.selectFeatureMetadata({
@@ -154,6 +123,7 @@ export class Map extends Component {
                 })
 
                 map.on('mousemove', 'census-blocks', (e) => {
+                  if (!e) console.warn('NO EVENT FIRED ON MOUSEMOVE')
                   const { GEOID } = e.features[0].properties
                   if (this.state.hoveredGeoID !== GEOID) {
                     this.setState({ hoveredGeoID: GEOID })

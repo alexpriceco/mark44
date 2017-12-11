@@ -17,6 +17,11 @@ module.exports = {
         loader: 'babel-loader!raw-loader!sass-loader'
       }
     )
+
+    console.log(config.module)
+    config.module.noParse = /(mapbox-gl)\.js$/
+    console.log(config.module)
+
     return config
   }
 }
