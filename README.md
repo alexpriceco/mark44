@@ -4,6 +4,8 @@ This is an interface built using Mapbox to display census blocks, and explore th
 
 This project was built with Peter Weyland, Dave Thompson, and Alex Price at the 2017 Hack Austin hackathon, in Austin, Texas.
 
+You can read about the background and process we took to building this [on Medium](https://medium.com/@alexpriceco/hack-austin-2017-659dce5cd9a).
+
 ## Launching a development environment
 1. Run `yarn` to install dependencies
 2. Add the /config directory to root
